@@ -5,7 +5,7 @@ import PlayMusic from './PlayMusic/PlayMusic';
 
 function App() {
 	return (
-		<div>
+		<div className="app">
 			<NavBar />
 			<UploadFiles />
 			<PlayMusic />

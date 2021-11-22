@@ -5,10 +5,7 @@ import './UploadFiles.css';
 let root = document.documentElement;
 let html = '';
 let showLstDReptext;
-let urlArr = [
-	'https://www.youtube.com/watch?v=dI0B87vSl9Y',
-	'https://www.youtube.com/watch?v=3K7E8npAkjc',
-];
+let urlArr = [];
 
 class UploadFiles extends React.Component {
 	constructor(props) {
@@ -16,6 +13,7 @@ class UploadFiles extends React.Component {
 		this.state = {
 			html: '',
 			value: 'Introduce el link de tu cancion',
+			urlArr: [],
 		};
 	}
 
@@ -33,18 +31,18 @@ class UploadFiles extends React.Component {
 	handleClick(e, value) {
 		this.changeOutPutLog('green', 'Hecho!');
 
+		this.state.urlArr.push(value);
 		urlArr.push(value);
 
 		showLstDReptext = true;
-
-		ReactPlayer.url = urlArr;
 	}
 
 	handleDelClick(e) {
+		this.state.urlArr.splice(+e.target.getAttribute('data-key'), 1);
 		urlArr.splice(+e.target.getAttribute('data-key'), 1);
 		this.changeOutPutLog('gray', 'Borrado');
 
-		if (urlArr.length < 1) {
+		if (this.state.urlArr.length < 1) {
 			showLstDReptext = false;
 			this.changeOutPutLog('red', 'Playlist Borrada');
 		} else showLstDReptext = true;
@@ -53,13 +51,14 @@ class UploadFiles extends React.Component {
 		this.changeOutPutLog('red', 'Playlist Borrada');
 		showLstDReptext = false;
 
+		this.setState({ urlArr: [] });
 		urlArr = [];
 	}
 	changeOutPutLog(color, text) {
 		root.style.setProperty('--output-color', color);
-		this.setState({ html: `${text}<br />` });
+		this.setState({ html: (html = `${text}<br />`) });
 		setTimeout(() => {
-			this.setState({ html: `<br />` });
+			this.setState({ html: (html = `<br />`) });
 		}, 5 * 1000);
 	}
 
@@ -89,7 +88,6 @@ class UploadFiles extends React.Component {
 	render() {
 		return (
 			<div className="uploadFiles hidden">
-				<br />
 				<p>Enlace de canción/playlist para añadir a la cola:</p>
 				<input
 					className="urlInput"
@@ -113,7 +111,7 @@ class UploadFiles extends React.Component {
 					</div>
 				)}
 				<ul className="songsList">
-					{urlArr.map((url, i) => (
+					{this.state.urlArr.map((url, i) => (
 						<li className="songUrl" key={i} data-key={i}>
 							{url}{' '}
 							<button

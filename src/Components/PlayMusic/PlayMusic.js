@@ -1,42 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import './PlayMusic.css';
 import { urlArr } from '../UploadFiles/UploadFiles';
+import $ from 'jquery';
 
-// let showReactPlayer = false;
+function button(onClick, text) {
+	return <button onClick={onClick}>{text}</button>;
+}
 
-class PlayMusic extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			playing: false,
-		};
+function PlayMusic(props) {
+	let [url, setUrl] = useState(null);
+	let [playing, setPlaying] = useState(true);
+
+	async function play(e) {
+		await setUrl(urlArr);
+		await setPlaying(true);
 	}
 
-	play(e) {
-		// showReactPlayer = true;
-		this.setState({ playing: true });
-	}
-	pause(e) {
-		this.setState({ playing: false });
+	function pause() {
+		setPlaying(false);
 	}
 
-	render() {
-		return (
-			<div className="playMusic ">
-				<ReactPlayer
-					className="react-player"
-					url={urlArr}
-					height="200px"
-					width="300px"
-					playing={this.state.playing}
-				/>
-				<button onClick={this.play.bind(this)}>></button>
-				<button onClick={this.pause.bind(this)}>| |</button>
-				<hr />
-			</div>
-		);
+	function stop() {
+		setUrl(null);
+		setPlaying(false);
 	}
+
+	async function reload() {
+		await setUrl(null);
+		if (urlArr.length < 1) return;
+		setUrl(urlArr);
+		setPlaying(true);
+	}
+
+	$([urlArr]).on('arrayChange', handleArrayChange);
+	function handleArrayChange() {
+		console.log('hola');
+	}
+
+	return (
+		<div className="playMusic hidden">
+			<ReactPlayer
+				className="react-player"
+				url={url}
+				height="400px"
+				width="500px"
+				playing={playing}
+			/>
+			{button(play, 'play')}
+			{button(pause, 'pause')}
+			{button(stop, 'stop')}
+			{button(reload, 'reload')}
+			<br />
+			<br />
+			<hr />
+		</div>
+	);
 }
 
 export default PlayMusic;
