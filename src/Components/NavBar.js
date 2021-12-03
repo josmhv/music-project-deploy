@@ -1,5 +1,6 @@
 import React from 'react';
 import Links from './Links';
+import $ from 'jquery';
 
 class NavBar extends React.Component {
 	handleClick(e) {
@@ -9,7 +10,7 @@ class NavBar extends React.Component {
 	}
 
 	renderGUI(id) {
-		document.querySelector(`.${id}`).classList.toggle('hidden');
+		$(`.${id}`).toggle();
 	}
 
 	render() {

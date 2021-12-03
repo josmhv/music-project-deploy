@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactPlayer from 'react-player/youtube';
+// import $ from 'jquery';
+import { postData, getData, urlArrDB } from '../APIConnect';
 import './UploadFiles.css';
 
 let root = document.documentElement;
@@ -12,7 +14,8 @@ class UploadFiles extends React.Component {
 		super(props);
 		this.state = {
 			html: '',
-			value: 'Introduce el link de tu cancion',
+			value1: 'https://www.youtube.com/watch?v=gGHwYMwXX88',
+			value2: '',
 			urlArr: [],
 		};
 	}
@@ -64,7 +67,10 @@ class UploadFiles extends React.Component {
 
 	handleChange(e) {
 		// Funcion ajuro para que el .value funcione
-		this.setState({ value: e.target.value });
+		this.setState({ value1: e.target.value });
+	}
+	handleChangeSave(e) {
+		this.setState({ value2: e.target.value });
 	}
 
 	urlInputOnKeyDown(e) {
@@ -76,9 +82,37 @@ class UploadFiles extends React.Component {
 		}
 	}
 
+	async GETdata() {
+		await getData();
+		if (!urlArrDB) return;
+		console.log('ey');
+		this.setState({ urlArr: urlArrDB });
+		urlArr = urlArrDB;
+		// this.changeOutPutLog('green', 'Playlist Guardada!');
+	}
+
+	async POSTdata(e) {
+		if (urlArr.length < 1) return;
+		let playlistData = {
+			urls: urlArr,
+			userName: 'Jose',
+			PLName: document.querySelector('.savePlaylistInput').value,
+		};
+		postData(playlistData);
+		this.changeOutPutLog('green', 'Playlist Guardada!');
+		this.clearInputs(e);
+	}
+
+	saveHandleKeyDown(e) {
+		if (e.key === 'Enter') {
+			// Funciones al presionar Enter
+			this.POSTdata(e);
+		}
+	}
+
 	clearInputs(e) {
 		// Limpiar los contenedores de texto
-		this.setState({ value: '' });
+		this.setState({ value1: '', value2: '' });
 	}
 
 	renderError(mensaje) {
@@ -95,7 +129,7 @@ class UploadFiles extends React.Component {
 					onKeyDown={this.urlInputOnKeyDown.bind(this)}
 					onFocus={this.clearInputs.bind(this)}
 					onChange={this.handleChange.bind(this)}
-					value={this.state.value}
+					value={this.state.value1}
 				/>
 				<button className="inputBtn" onClick={this.inputBtnOnClick.bind(this)}>
 					Añadir
@@ -106,7 +140,7 @@ class UploadFiles extends React.Component {
 					<div>
 						Lista de reproducción
 						<button className="delPLButton" onClick={this.handleClearPlaylist.bind(this)}>
-							Borrar playlist
+							Borrar Playlist
 						</button>
 					</div>
 				)}
@@ -125,6 +159,27 @@ class UploadFiles extends React.Component {
 						</li>
 					))}
 				</ul>
+				<div>
+					Guardar Playlist con nombre:
+					<input
+						className="savePlaylistInput"
+						type="text"
+						value={this.state.value2}
+						onChange={this.handleChangeSave.bind(this)}
+						onFocus={this.clearInputs.bind(this)}
+						onKeyDown={this.saveHandleKeyDown.bind(this)}
+					/>
+					<button className="savePlaylist" onClick={this.POSTdata.bind(this)}>
+						Guardar
+					</button>
+				</div>
+				<div>
+					Obtener Playlist por nombre:
+					<input type="text" className="getPlaylistInput" />
+					<button className="getPlaylist" onClick={this.GETdata.bind(this)}>
+						Obtener
+					</button>
+				</div>
 				<br />
 				<hr />
 			</div>
