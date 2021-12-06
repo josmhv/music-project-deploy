@@ -85,7 +85,7 @@ class UploadFiles extends React.Component {
 	async GETdata() {
 		await getData();
 		if (!urlArrDB) return;
-		console.log('ey');
+		console.log('yargen puto');
 		this.setState({ urlArr: urlArrDB });
 		urlArr = urlArrDB;
 		// this.changeOutPutLog('green', 'Playlist Guardada!');
