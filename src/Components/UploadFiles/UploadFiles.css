@@ -2,6 +2,13 @@
 	--output-color: black;
 }
 
+.uploadFiles {
+	padding: 20px;
+}
 .outPutUrl {
 	color: var(--output-color);
+}
+
+.p1 {
+	font-size: 20px;
 }

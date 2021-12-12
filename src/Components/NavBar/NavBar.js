@@ -1,6 +1,7 @@
 import React from 'react';
-import Links from './Links';
+import Links from '../Links';
 import $ from 'jquery';
+import './NavBar.scss';
 
 class NavBar extends React.Component {
 	handleClick(e) {
@@ -18,11 +19,8 @@ class NavBar extends React.Component {
 			<div>
 				<nav className="nav">
 					<ul onClick={this.handleClick.bind(this)} className="nav__links">
-						<Links texto={'Añadir canciones'} id={'uploadFiles'} />
 						<Links texto={'Reproducir Musica'} id={'playMusic'} />
-						<br />
-						<hr />
-						<br />
+						<Links texto={'Añadir canciones'} id={'uploadFiles'} />
 					</ul>
 				</nav>
 			</div>

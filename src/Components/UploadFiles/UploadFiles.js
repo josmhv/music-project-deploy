@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactPlayer from 'react-player/youtube';
-// import $ from 'jquery';
+import $ from 'jquery';
 import { postData, getData, urlArrDB } from '../APIConnect';
 import './UploadFiles.css';
 
@@ -32,6 +32,7 @@ class UploadFiles extends React.Component {
 	}
 
 	handleClick(e, value) {
+		$('.playMusic').removeClass('hidden');
 		this.changeOutPutLog('green', 'Hecho!');
 
 		this.state.urlArr.push(value);
@@ -46,11 +47,13 @@ class UploadFiles extends React.Component {
 		this.changeOutPutLog('gray', 'Borrado');
 
 		if (this.state.urlArr.length < 1) {
+			$('.playMusic').addClass('hidden');
 			showLstDReptext = false;
 			this.changeOutPutLog('red', 'Playlist Borrada');
 		} else showLstDReptext = true;
 	}
 	handleClearPlaylist(e) {
+		$('.playMusic').addClass('hidden');
 		this.changeOutPutLog('red', 'Playlist Borrada');
 		showLstDReptext = false;
 
@@ -85,7 +88,6 @@ class UploadFiles extends React.Component {
 	async GETdata() {
 		await getData();
 		if (!urlArrDB) return;
-		console.log('yargen puto');
 		this.setState({ urlArr: urlArrDB });
 		urlArr = urlArrDB;
 		// this.changeOutPutLog('green', 'Playlist Guardada!');
@@ -122,7 +124,7 @@ class UploadFiles extends React.Component {
 	render() {
 		return (
 			<div className="uploadFiles hidden">
-				<p>Enlace de canción/playlist para añadir a la cola:</p>
+				<p className="p1">Enlace de canción/playlist para añadir a la cola:</p>
 				<input
 					className="urlInput"
 					type="url"
@@ -180,8 +182,6 @@ class UploadFiles extends React.Component {
 						Obtener
 					</button>
 				</div>
-				<br />
-				<hr />
 			</div>
 		);
 	}

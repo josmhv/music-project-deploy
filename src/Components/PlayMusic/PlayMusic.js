@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
-import './PlayMusic.css';
+import './PlayMusic.scss';
 import { urlArr } from '../UploadFiles/UploadFiles';
 import $ from 'jquery';
-// import onChange from 'on-change';
 
-function button(onClick, text) {
-	return <button onClick={onClick}>{text}</button>;
+function button(onClick, text, source) {
+	return (
+		<button onClick={onClick} className={text}>
+			{text}
+		</button>
+	);
 }
 function PlayMusic(props) {
 	let [url, setUrl] = useState(null);
@@ -52,7 +55,7 @@ function PlayMusic(props) {
 	}, []);
 
 	return (
-		<div className="playMusic ">
+		<div className="playMusic hidden">
 			<ReactPlayer
 				className="react-player"
 				url={url}
@@ -63,9 +66,6 @@ function PlayMusic(props) {
 			{button(play, 'play')}
 			{button(pause, 'pause')}
 			{button(stop, 'stop')}
-			<br />
-			<br />
-			<hr />
 		</div>
 	);
 }
