@@ -41,7 +41,7 @@ function PlayMusic(props) {
 
 	useEffect(() => {
 		const [uploadFiles] = $('.uploadFiles');
-		uploadFiles.addEventListener('click', (e) => {
+		uploadFiles.addEventListener('click', async (e) => {
 			setTimeout(() => {
 				if (
 					e.target.className === 'inputBtn' ||
@@ -50,7 +50,7 @@ function PlayMusic(props) {
 				) {
 					reload();
 				}
-			}, 20);
+			}, 300);
 		});
 	}, []);
 

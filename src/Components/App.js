@@ -2,8 +2,7 @@ import React from 'react';
 import NavBar from './NavBar/NavBar';
 import { UploadFiles } from './UploadFiles/UploadFiles';
 import PlayMusic from './PlayMusic/PlayMusic';
-import { Login } from './Login/Login';
-// import Search from './Search';
+// import { Login } from './Login/Login';
 
 function App() {
 	return (
@@ -11,9 +10,8 @@ function App() {
 			<NavBar />
 			<UploadFiles />
 			<PlayMusic />
-			{/* <Search /> */}
-			<Login />
-			<div className="overlay"></div>
+			{/* <Login /> */}
+			{/* <div className="overlay"></div> */}
 		</div>
 	);
 }

@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player/youtube';
 import $ from 'jquery';
 import { postData, getData, urlArrDB } from '../APIConnect';
 import './UploadFiles.css';
+import search from '../Search';
 
 let root = document.documentElement;
 let html = '';
@@ -14,20 +15,25 @@ class UploadFiles extends React.Component {
 		super(props);
 		this.state = {
 			html: '',
-			value1: 'https://www.youtube.com/watch?v=gGHwYMwXX88',
+			value1: 'https://www.youtube.com/watch?v=fDWpSQYmZqM',
 			value2: '',
 			urlArr: [],
+			urlTitles: [],
 		};
 	}
 
 	async inputBtnOnClick(e) {
 		// Renderizar y actualizar el contido del html despues del div original
-		const urlInput = document.querySelector('.urlInput');
-		const isPlayable = ReactPlayer.canPlay(urlInput.value);
+		const urlInput = document.querySelector('.urlInput').value;
+		const { title, id } = await search(urlInput);
+		const urlParsed = `youtu.be/${id}`;
+		const isPlayable = ReactPlayer.canPlay(urlParsed);
 		if (!isPlayable) {
-			this.renderError('URL no válida.');
+			this.renderError('Texto no válido.');
 		} else {
-			this.handleClick(e, urlInput.value);
+			this.handleClick(e, urlParsed);
+			// this.state.urlTitles.push(title);
+			this.setState({ urlTitles: [...this.state.urlTitles, title] });
 		}
 	}
 
@@ -43,6 +49,7 @@ class UploadFiles extends React.Component {
 
 	handleDelClick(e) {
 		this.state.urlArr.splice(+e.target.getAttribute('data-key'), 1);
+		this.state.urlTitles.splice(+e.target.getAttribute('data-key'), 1);
 		urlArr.splice(+e.target.getAttribute('data-key'), 1);
 		this.changeOutPutLog('gray', 'Borrado');
 
@@ -58,6 +65,8 @@ class UploadFiles extends React.Component {
 		showLstDReptext = false;
 
 		this.setState({ urlArr: [] });
+		this.setState({ urlTitles: [] });
+
 		urlArr = [];
 	}
 	changeOutPutLog(color, text) {
@@ -89,6 +98,7 @@ class UploadFiles extends React.Component {
 		await getData();
 		if (!urlArrDB) return;
 		this.setState({ urlArr: urlArrDB });
+		this.setState({ urlTitles: urlArr });
 		urlArr = urlArrDB;
 		// this.changeOutPutLog('green', 'Playlist Guardada!');
 	}
@@ -123,8 +133,8 @@ class UploadFiles extends React.Component {
 
 	render() {
 		return (
-			<div className="uploadFiles hidden">
-				<p className="p1">Enlace de canción/playlist para añadir a la cola:</p>
+			<div className="uploadFiles ">
+				<p className="p1">Canción/playlist para añadir a la cola:</p>
 				<input
 					className="urlInput"
 					type="url"
@@ -147,7 +157,7 @@ class UploadFiles extends React.Component {
 					</div>
 				)}
 				<ul className="songsList">
-					{this.state.urlArr.map((url, i) => (
+					{this.state.urlTitles.map((url, i) => (
 						<li className="songUrl" key={i} data-key={i}>
 							{url}{' '}
 							<button
@@ -161,26 +171,28 @@ class UploadFiles extends React.Component {
 						</li>
 					))}
 				</ul>
-				<div>
-					Guardar Playlist con nombre:
-					<input
-						className="savePlaylistInput"
-						type="text"
-						value={this.state.value2}
-						onChange={this.handleChangeSave.bind(this)}
-						onFocus={this.clearInputs.bind(this)}
-						onKeyDown={this.saveHandleKeyDown.bind(this)}
-					/>
-					<button className="savePlaylist" onClick={this.POSTdata.bind(this)}>
-						Guardar
-					</button>
-				</div>
-				<div>
-					Obtener Playlist por nombre:
-					<input type="text" className="getPlaylistInput" />
-					<button className="getPlaylist" onClick={this.GETdata.bind(this)}>
-						Obtener
-					</button>
+				<div className="apiGUI hidden">
+					<div>
+						Guardar Playlist con nombre:
+						<input
+							className="savePlaylistInput"
+							type="text"
+							value={this.state.value2}
+							onChange={this.handleChangeSave.bind(this)}
+							onFocus={this.clearInputs.bind(this)}
+							onKeyDown={this.saveHandleKeyDown.bind(this)}
+						/>
+						<button className="savePlaylist" onClick={this.POSTdata.bind(this)}>
+							Guardar
+						</button>
+					</div>
+					<div>
+						Obtener Playlist por nombre:
+						<input type="text" className="getPlaylistInput" />
+						<button className="getPlaylist" onClick={this.GETdata.bind(this)}>
+							Obtener
+						</button>
+					</div>
 				</div>
 			</div>
 		);

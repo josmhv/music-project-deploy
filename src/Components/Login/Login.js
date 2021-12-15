@@ -69,6 +69,10 @@ function Login(props) {
 		supInput.addEventListener('change', () => {
 			checkSUP();
 		});
+
+		document.querySelector('.sup-input').addEventListener('keydown', (e) => {
+			if (e.key === 'Enter') submitUserName();
+		});
 	}, []);
 
 	return (
